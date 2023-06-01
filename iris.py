@@ -59,3 +59,11 @@ def detect_faces(classifier,img):
     for (x,y,w,h) in biggest:
         frame = img[y:y+h,x:x+w]
     return frame
+
+detect_eye(eye_cascade, gray_convert)
+detect_faces(face_cascade, gray_convert)
+
+detector_params = cv.SimpleBlobDetector_Params()
+detector_params.filterByArea = True
+detector_params.maxArea = 1500
+detector = cv.SimpleBlobDetector_create(detector_params)
