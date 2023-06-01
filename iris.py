@@ -19,7 +19,7 @@ for (xe,ye,we,he) in detection_eyes:
     cv.rectangle(face, (xe,ye), (xe+we,ye+he), (0,225,255),2)
 
 def separe_img(classifier,img,img_gray):
-    coords = cascade.detectMultiScale(img_gray,1.3,5)
+    coords = classifier.detectMultiScale(img_gray,1.3,5)
     height = np.size(img,0)
     
     for (x,y,w,h) in coords:
@@ -28,7 +28,7 @@ def separe_img(classifier,img,img_gray):
 
 def detect_eye(classifier,img):
     gray_frame = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
-    eyes = cascade.detectMultiScale(gray_frame,1.3,5)
+    eyes = classifier.detectMultiScale(gray_frame,1.3,5)
     width = np.size(gray_frame,1)
     height = np.size(gray_frame,0)
     if y > height / 2:
@@ -40,5 +40,22 @@ def detect_eye(classifier,img):
             right_eye = img[y:y + h, x:x + w]
     return left_eye, right_eye
 
+def detect_faces(classifier,img):
 
+    gray_frame = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    coords = classifier.detectMultiScale(gray_frame,1.3,5)
 
+    if len(coords) > 1:
+        biggest = (0,0,0,0)
+        for i in coords:
+            if i[3] > biggest[3]:
+                biggest = i
+        biggest = np.array([i],np.int32)
+    elif len(coords) == 1:
+        biggest = coords
+    else:
+        return None
+    
+    for (x,y,w,h) in biggest:
+        frame = img[y:y+h,x:x+w]
+    return frame
